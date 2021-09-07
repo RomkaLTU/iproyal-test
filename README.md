@@ -1,3 +1,34 @@
+## Run project locally
+
+1. `git clone https://github.com/RomkaLTU/iproyal-test`
+2. `cd iproyal-test`
+3. ```
+   docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php80-composer:latest \
+    composer install --ignore-platform-reqs
+   ```
+4. `cp .env.example .env` change APP_PORT and/or FORWARD_DB_PORT if required, default is 8080 and 33066.
+5. `./vendor/bin/sail up -d`
+6. `./vendor/bin/sail artisan key:generate`
+7. `./vendor/bin/sail artisan migrate`
+
+**You now may use these endpoints:**
+```
+POST: http://localhost:8080/api/orders
+{
+    "country": "lt",
+    "proxy_count": 25,
+    "title": "My order"
+}
+
+GET: http://localhost:8080/api/orders
+
+GET: http://localhost:8080/api/orders/{orderNumber}
+```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
