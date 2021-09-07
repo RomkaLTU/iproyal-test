@@ -37,7 +37,7 @@ test('Single order returns correct JSON structure', function () {
 it('can create order', function () {
     $response = $this->post(route('orders.post'), [
         'country' => 'lt',
-        'number' => 25,
+        'proxy_count' => 25,
         'title' => 'My order',
     ]);
 
@@ -48,6 +48,6 @@ it('can create order', function () {
 
 it('has order', function () {
     $this->assertDatabaseHas('orders', [
-        'orderNumber' => 111,
+        'order_number' => 111,
     ]);
 });
