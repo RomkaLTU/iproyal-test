@@ -1,8 +1,13 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
+
+beforeEach(fn() => Order::factory()->create());
+
+$orderNumber = date('Ymd') . 1;
 
 test('Orders index returns success', function () {
     $response = $this->get(route('orders'));
@@ -14,22 +19,22 @@ test('Orders index returns correct JSON structure', function () {
     $response = $this->get(route('orders'));
 
     $response->assertJsonStructure([
-        'status',
         'data',
+        'links',
+        'meta',
     ]);
 });
 
-test('Single order returns success', function () {
-    $response = $this->get(route('orders.get', 1111111));
+test('Single order returns success', function () use ($orderNumber) {
+    $response = $this->get(route('orders.get', $orderNumber));
 
     $response->assertStatus(200);
 });
 
-test('Single order returns correct JSON structure', function () {
-    $response = $this->get(route('orders.get', 1111111));
+test('Single order returns correct JSON structure', function () use ($orderNumber) {
+    $response = $this->get(route('orders.get', $orderNumber));
 
     $response->assertJsonStructure([
-        'status',
         'data',
     ]);
 });
@@ -41,13 +46,13 @@ it('can create order', function () {
         'title' => 'My order',
     ]);
 
-    $response->assertJsonFragment([
-        'status' => 'ok',
+    $response->assertJsonStructure([
+        'data',
     ]);
 });
 
-it('has order', function () {
+it('has order', function () use ($orderNumber) {
     $this->assertDatabaseHas('orders', [
-        'order_number' => 111,
+        'order_number' => $orderNumber,
     ]);
 });
